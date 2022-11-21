@@ -1,163 +1,61 @@
 import numpy as np
 
-m_sqr_arr = np.array([[1, 2, 3], [4, 5, 6], [7, 8, 9]]) #Задаємо матрицю 3*3
+from scipy import optimize
 
-print(m_sqr_arr)
+from scipy.misc import derivative
 
-m_sqr_mx = np.matrix([[1, 2, 3], [4, 5, 6], [7, 8, 9]]) #Ще один варіант як задати матрицю
+import math
 
-print(m_sqr_mx)
+x0 = 0.15
 
-#Побудуємо діагональ
+y0 = -2.1
 
-m_sqr_mx = np.matrix('1 2 3; 4 5 6; 7 8 9')
+delta = 0.1
 
-diag = np.diag(m_sqr_mx)
+def f1(y):
 
-print(diag)
+return 1/3*math.cos(y) + 0.3 #задаємо функції
 
-#Побудуємо діагональну матрицю на базі полученої діагоналі
+def f2 (x):
 
-m_diag_np = np.diag(np.diag(m_sqr_mx))
+return math.sin(x - 0.6) - 1.6 #задаємо функції
 
-print(m_diag_np)
+def iter (x,y,e):
 
-#Транспонована матриця
+xn = x
 
-= np.matrix('1 2 3; 4 5 6')
+yn = y
 
-print('A=',a)
+xn1 = f2(x)
 
-a_t = a.transpose()
+yn1 = f1(y)
 
-print(a_t)
+n = 1
 
-print(a.T) # ще один способ транспонування матриці
+while ((abs(xn1-xn)>=e) & (abs(yn1-yn) >=e)):
 
-a = np.matrix('1 2; 3 4')
+xn = xn1
 
-a_det = np.linalg.det(a) #Визначник матриці
+yn = yn1
 
-print(format(a_det, '.9g'))
+xn1 = f2(yn)
 
-#Множення матриці на число
+yn1 = f1(xn)
 
-a = np.matrix('1 2 3; 4 5 6')
+n += 1
 
-c = 3 * a
+print ('Simple iteration:')
 
-print(c)
+print ('x=', xn, '\ny=',yn,'\nThe amount of iteration = ',n)
 
-#Додавання матриць
+iter(x0,y0,0.0001)
 
-a = np.matrix('1 6 3; 8 2 7')
+def f3(x): #Задаємо функцію для перевірки
 
-b = np.matrix('8 1 5; 6 9 12')
+return 3*x[0] - math.cos(x[1]) - 0.9, math.sin(x[0] - 0.6) - x[1] -1.6
 
-c = a + b
+s = optimize.root(f3, [0.,0.], method = 'hybr') #Перевірка розв*язку Відповіді мають співпасти
 
-print(c)
+print ('Chek',s.x)Відповіді мають співпасти
 
-#Добуток матриць
-
-a = np.matrix('1 2 3; 4 5 6')
-
-b = np.matrix('7 8; 9 1; 2 3')
-
-c = a.dot(b)
-
-print(c)
-
-# Обернена матриця
-
-A = np.matrix('1 -3; 2 5')
-
-A_inv = np.linalg.inv(A)
-
-print(A_inv)
-
-#Ранг матриці
-
-rank = np.linalg.matrix_rank(A)
-
-print(rank)
-
-#Матричний метод
-
-A = np.matrix('3 -1 2; 1 4 -1; 2 3 1')
-
-B = np.matrix('-4; 10; 8')
-
-print('A=', A)
-
-print('B=',B)
-
-A_inv = np.linalg.inv(A)
-
-print(A_inv)
-
-X = A_inv.dot(B)
-
-print('X=',X)
-
-#Метод Крамера
-
-a = np.matrix('3 -1 2; 1 4 -1; 2 3 1')
-
-print('A=',a)
-
-b = np.matrix('-4; 10; 8')
-
-print('B=',b)
-
-def kramer (a, b):
-
-a_det = np.linalg.det(A)
-
-print('Детермінант матриці = ', a_det)
-
-#Зробити реревірку,що детермінант не дорівнює нулю
-
-if (a_det != 0):
-
-print ('Розв*язуємо систему')
-
-x_m = np.matrix(a)
-
-x_m[:, 0] = b # формування допоміжної матриці (1 ст. замінюємо на ст. b)
-
-print('x_m=', x_m)
-
-y_m = np.matrix(a) #2 ст. замінюємо на ст. b
-
-y_m[:, 1] = b #2 c
-
-print('y_m=',y_m)
-
-z_m = np.matrix(a) #3 ст. замінюємо на ст. b
-
-z_m[:, 2] = b
-
-print('z_m=',z_m)
-
-x = np.linalg.det(x_m) / a_det
-
-y = np.linalg.det(y_m) / a_det
-
-z = np.linalg.det(z_m) / a_det
-
-print('X = ', round(x,5))
-
-print('Y=', round(y,5))
-
-print('Z=', round(z,5))
-
-else:
-
-print('Розв*язків немає')
-
-kramer(a,b)
-
-#Перевірка за допомогою методом solve() пакету linalg:
-
-X = np.linalg.solve(a, b)
+print ('Chek',s.x)
