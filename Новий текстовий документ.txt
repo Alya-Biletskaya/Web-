@@ -1,17 +1,29 @@
-import matplotlib.pyplot as plt
+import sympy as sp
 
-from scipy.interpolate import UnivariateSpline
+from math import factorial
 
-import numpy as np
+def taylor(x):
 
-x = [0,1.4,2.3,3.3,4.5]
+y = 0
 
-y = [1,1.155,0.079,-1.145,-1.188]
+d1 = sp.diff(f, x) # перша похідна
 
-spl = UnivariateSpline(x, y) #Побудова сплайна
+d2 = sp.diff(d1, x) #друга похідна
 
-xs = np.linspace(0, 4.5, 1000)
+d3 = sp.diff(d2, x) # третя похідна
 
-plt.plot(x,y,'ro', xs, spl(xs), 'g')
+print('d1=',d1,'d2=',d2,'d3=',d3)
 
-plt.show()
+y += f + d1*x + d2*(x-0)**2/factorial(2) + d3*(x-0)**3/factorial(3)
+
+print ('y = ', y)
+
+return y
+
+x = sp.symbols('x')
+
+f = sp.cos(3*x - 1) + x
+
+taylor_x = taylor(x)
+
+sp.plot(taylor_x, f, (x, -1, 1), label='Taylor')
