@@ -1,53 +1,163 @@
 import numpy as np
 
-import math
+m_sqr_arr = np.array([[1, 2, 3], [4, 5, 6], [7, 8, 9]]) #Задаємо матрицю 3*3
 
-import matplotlib.pyplot as plt
+print(m_sqr_arr)
 
-def f(x):
+m_sqr_mx = np.matrix([[1, 2, 3], [4, 5, 6], [7, 8, 9]]) #Ще один варіант як задати матрицю
 
-return x**4 - x - 1
+print(m_sqr_mx)
 
-a = 1.
+#Побудуємо діагональ
 
-b = 2.
+m_sqr_mx = np.matrix('1 2 3; 4 5 6; 7 8 9')
 
-eps = 0.001 #точність
+diag = np.diag(m_sqr_mx)
 
-def rec_dyhotomy(a, b, eps):
+print(diag)
 
-if abs(f(b) - f(a)) < eps:
+#Побудуємо діагональну матрицю на базі полученої діагоналі
 
-print('Обчислюємо корінь')
+m_diag_np = np.diag(np.diag(m_sqr_mx))
 
-return
+print(m_diag_np)
 
-mid = (a+b) / 2
+#Транспонована матриця
 
-if f(mid) == 0 or abs(f(mid)) < eps:
+= np.matrix('1 2 3; 4 5 6')
 
-print(f'Корінь знаходиться в точці x = {mid}')
+print('A=',a)
 
-elif f(a)*f(mid) < 0:
+a_t = a.transpose()
 
-rec_dyhotomy(a, mid, eps)
+print(a_t)
+
+print(a.T) # ще один способ транспонування матриці
+
+a = np.matrix('1 2; 3 4')
+
+a_det = np.linalg.det(a) #Визначник матриці
+
+print(format(a_det, '.9g'))
+
+#Множення матриці на число
+
+a = np.matrix('1 2 3; 4 5 6')
+
+c = 3 * a
+
+print(c)
+
+#Додавання матриць
+
+a = np.matrix('1 6 3; 8 2 7')
+
+b = np.matrix('8 1 5; 6 9 12')
+
+c = a + b
+
+print(c)
+
+#Добуток матриць
+
+a = np.matrix('1 2 3; 4 5 6')
+
+b = np.matrix('7 8; 9 1; 2 3')
+
+c = a.dot(b)
+
+print(c)
+
+# Обернена матриця
+
+A = np.matrix('1 -3; 2 5')
+
+A_inv = np.linalg.inv(A)
+
+print(A_inv)
+
+#Ранг матриці
+
+rank = np.linalg.matrix_rank(A)
+
+print(rank)
+
+#Матричний метод
+
+A = np.matrix('3 -1 2; 1 4 -1; 2 3 1')
+
+B = np.matrix('-4; 10; 8')
+
+print('A=', A)
+
+print('B=',B)
+
+A_inv = np.linalg.inv(A)
+
+print(A_inv)
+
+X = A_inv.dot(B)
+
+print('X=',X)
+
+#Метод Крамера
+
+a = np.matrix('3 -1 2; 1 4 -1; 2 3 1')
+
+print('A=',a)
+
+b = np.matrix('-4; 10; 8')
+
+print('B=',b)
+
+def kramer (a, b):
+
+a_det = np.linalg.det(A)
+
+print('Детермінант матриці = ', a_det)
+
+#Зробити реревірку,що детермінант не дорівнює нулю
+
+if (a_det != 0):
+
+print ('Розв*язуємо систему')
+
+x_m = np.matrix(a)
+
+x_m[:, 0] = b # формування допоміжної матриці (1 ст. замінюємо на ст. b)
+
+print('x_m=', x_m)
+
+y_m = np.matrix(a) #2 ст. замінюємо на ст. b
+
+y_m[:, 1] = b #2 c
+
+print('y_m=',y_m)
+
+z_m = np.matrix(a) #3 ст. замінюємо на ст. b
+
+z_m[:, 2] = b
+
+print('z_m=',z_m)
+
+x = np.linalg.det(x_m) / a_det
+
+y = np.linalg.det(y_m) / a_det
+
+z = np.linalg.det(z_m) / a_det
+
+print('X = ', round(x,5))
+
+print('Y=', round(y,5))
+
+print('Z=', round(z,5))
 
 else:
 
-rec_dyhotomy(mid, b, eps)
+print('Розв*язків немає')
 
-rec_dyhotomy(a, b, eps)
+kramer(a,b)
 
-x = np.arange(a, b, 0.01)
+#Перевірка за допомогою методом solve() пакету linalg:
 
-plt.plot(x, f(x))
-
-plt.xlabel('x')
-
-plt.ylabel('f(x)')
-
-plt.title('Метод ділення навпіл')
-
-plt.grid()
-
-plt.show()
+X = np.linalg.solve(a, b)
